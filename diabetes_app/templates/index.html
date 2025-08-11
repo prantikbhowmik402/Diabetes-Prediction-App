@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Diabetes Prediction App</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #e2f2f5;
+        }
+        .container {
+            max-width: 600px;
+            margin-top: 50px;
+            background: rgb(204, 217, 228);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Diabetes Prediction</h2>
+        <form action="/predict" method="post">
+            <div class="mb-3">
+                <label>Pregnancies:</label>
+                <input type="number" class="form-control" name="pregnancies" value="{{ request.form.pregnancies or '' }}" required>
+
+                <label>Glucose:</label>
+                <input type="number" class="form-control" name="glucose" value="{{ request.form.glucose or '' }}" required>
+            </div>
+           
+            <div class="mb-3">
+                <label>Blood Pressure:</label>
+                <input type="number" class="form-control" name="bp" value="{{ request.form.bp or '' }}" required>
+            </div>
+            <div class="mb-3">
+                <label>Skin Thickness:</label>
+                <input type="number" class="form-control" name="skin" value="{{ request.form.skin or '' }}" required>
+            </div>
+            <div class="mb-3">
+                <label>Insulin:</label>
+                <input type="number" class="form-control" name="insulin" value="{{ request.form.insulin or '' }}" required>
+            </div>
+            <div class="mb-3">
+                <label>BMI:</label>
+                <input type="number" step="0.1" class="form-control" name="bmi" value="{{ request.form.bmi or '' }}" required>
+            </div>
+            <div class="mb-3">
+                <label>Diabetes Pedigree Function:</label>
+                <input type="number" step="0.01" class="form-control" name="dpf" value="{{ request.form.dpf or '' }}" required>
+            </div>
+            <div class="mb-3">
+                <label>Age:</label>
+                <input type="number" class="form-control" name="age" value="{{ request.form.age or '' }}" required>
+            </div>
+            <div class="d-grid">
+                <button type="submit" class="btn btn-primary">Predict</button>
+            </div>
+        </form>
+
+        {% if prediction_text %}
+        <div class="alert alert-info mt-4 text-center" role="alert">
+            {{ prediction_text }}
+        </div>
+        {% endif %}
+    </div>
+    {% if prediction_text %}
+<div id="popup-alert" class="alert {{ 'alert-success' if 'Not' in prediction_text else 'alert-danger' }} position-fixed top-0 start-50 translate-middle-x mt-3 text-center shadow" style="z-index: 9999; width: 50%;">
+    {{ "You are safe! (Not Diabetic) 🎉" if "Not" in prediction_text else "Warning: Diabetic detected! ⚠️" }}
+</div>
+
+<script>
+    setTimeout(function(){
+        var popup = document.getElementById("popup-alert");
+        if (popup) {
+            popup.style.display = "none";
+        }
+    }, 5000); // 5 seconds
+</script>
+{% endif %}
+
+</body>
+</html>
